@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get<ConfigService<AppConfigType>>(ConfigService);
-  const port = configService.get<number>('port') || 8083;
+  const port = configService.get<number>('port') || 8080;
 
   app.use(cookieParser());
 

@@ -1,4 +1,3 @@
-import { CacheModule } from '@nestjs/cache-manager';
 import {
   Module,
   MiddlewareConsumer,
@@ -11,8 +10,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DatabaseModule } from 'src/database/database.module';
 import { AppService } from './app.service';
-import { RedisCacheModule } from 'src/modules/cache/redis-cache.module';
 import { ApiKeyMiddleware } from 'src/middlewares/api-key.middleware';
+import { AuthModule } from 'src/modules/auth/module';
+import { AccountModule } from 'src/modules/account/module';
 
 @Module({
   imports: [
@@ -20,22 +20,11 @@ import { ApiKeyMiddleware } from 'src/middlewares/api-key.middleware';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    CacheModule.registerAsync({
-      isGlobal: true,
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        store: await import('cache-manager-ioredis'),
-        host: configService.get('REDIS_HOST'),
-        port: configService.get('REDIS_PORT'),
-        password: configService.get('REDIS_PASSWORD'),
-        db: configService.get('REDIS_INDEX'),
-        ttl: 60,
-      }),
-    }),
+
     DatabaseModule,
     ScheduleModule.forRoot(),
-    RedisCacheModule,
+    AuthModule,
+    AccountModule,
   ],
   controllers: [AppBaseController],
   providers: [
