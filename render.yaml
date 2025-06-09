@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: nest-backend
+    env: node
+    plan: free
+    buildCommand: yarn build
+    startCommand: node dist/main
+    envVars:
+      - key: NODE_ENV
+        value: production
